@@ -73,15 +73,19 @@
         this.board = board;
         this.board.bars.push(this);
         this.kind = "rectangle";
-        this.speed = 20;
+        this.speed = 10;
     }
 
     self.Bar.prototype = {
         down: function () {
+            if(this.y <= 300) {
             this.y += this.speed;
+            }
         },
         up: function () {
+            if(this.y >= 0) {
             this.y -= this.speed;
+            }
         },
         toString: function () {
             return "x: " + this.x + " y: " + this.y;
@@ -120,7 +124,7 @@
             if(this.board.ball.y <= 0){
                 this.board.ball.speed_y = this.board.ball.speed_y * -1;
             }
-            if(this.board.ball.y >= 500){
+            if(this.board.ball.y >= 400){
                 this.board.ball.speed_y = this.board.ball.speed_y * -1;
             }
         },
@@ -159,8 +163,13 @@
             switch(element.kind) {
   
                 case "rectangle":
+                    try {
                    ctx.fillRect(element.x,element.y,element.width,element.height);
                    break;
+                    } catch (error) {
+                        alert(error);
+                    }
+
 
                    case "circle":
                     ctx.beginPath();
@@ -201,11 +210,41 @@ document.addEventListener("keydown", function (ev) {
     }
 });
 
-board_view.draw();
+
 window.requestAnimationFrame(controller);
 
+var puntosJugador1 = document.getElementById("puntosJugador1");
+var puntosJugador2 = document.getElementById("puntosJugador2");
 
+function reiniciar() {
+    if(ball.x >=800 || ball.x <= 0){
+        if(ball.x >=800){
+            alert("Ganaste jugador 1");
+            puntosJugador1.innerHTML = (Number(puntosJugador1.innerHTML)+1)
+        }
+        if(ball.x <=0){
+            alert("Ganaste jugador 2");
+            puntosJugador2.innerHTML = (Number(puntosJugador2.innerHTML)+1)
+        } 
+        bar.x = 20;
+        bar.y = 100;
+        bar2.x = 735;
+        bar2.y = 100;
+        ball.x = 350;
+        ball.y = 100;
+        ball.direction = 1;
+        ball.bounceAngle = 0;
+        ball.speed_x = 2;
+        ball.speed_y = 0;
+        ball.maxBounceAngle = Math.PI / 12;
+        board.playing = !board.playing;
+    }
+
+}
 function controller() {
     board_view.play();
+    board_view.clean();
+    board_view.draw();
     window.requestAnimationFrame(controller);
+    reiniciar();
 }
