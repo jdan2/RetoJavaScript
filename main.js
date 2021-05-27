@@ -45,6 +45,22 @@
         get height() {
             return this.radius * 2;
         },
+        collision: function (bar) {
+            //reacciona a colisiones
+            var relativeIntersectY = (bar.y + (bar.height / 2)) - this.y;
+            var normalizedIntersectY = relativeIntersectY / (bar.height / 2);
+            this.bounceAngle = normalizedIntersectY * this.maxBounceAngle;
+
+            this.speed_y = this.speed * -Math.sin(this.bounceAngle);
+            this.speed_x = this.speed * Math.cos(this.bounceAngle);
+
+            if (this.x > (this.board.width / 2)) {
+                this.direction = -1;
+            } else {
+                this.direction = 1;
+            }
+
+        }
     }
 })();
 
@@ -94,14 +110,48 @@
                 draw(this.ctx,el);
             };
         },
+
+        checkCollisions: function () {
+            for (var i = this.board.bars.length - 1; i >= 0; i--) {
+                if (hit(this.board.bars[i], this.board.ball)) {
+                    this.board.ball.collision(bar);
+                }
+            };
+            if(this.board.ball.y <= 0){
+                this.board.ball.speed_y = this.board.ball.speed_y * -1;
+            }
+            if(this.board.ball.y >= 500){
+                this.board.ball.speed_y = this.board.ball.speed_y * -1;
+            }
+        },
+
         play: function () {
             if (this.board.playing) {
                 this.clean();
                 this.draw();
+                this.checkCollisions();
                 this.board.ball.move();
             }
             
         }
+    }
+
+    function hit(a, b) {
+        var hit = false;
+        if (b.x + b.width >= a.x && b.x < a.x + a.width) {
+
+            if (b.y + b.height >= a.y && b.y < a.y + a.height)
+                hit = true;
+        }
+        if (b.x <= a.x && b.x + b.width >= a.x + a.width) {
+            if (b.y <= + a.y && b.y + b.height >= a.y + a.height)
+                hit = true;
+        }
+        if (a.x <= b.x && a.x + a.width >= b.x + b.width) {
+            if (a.y <= b.y && a.y + a.height >= b.y + b.height)
+                hit = true;
+        }
+        return hit;
     }
 
     function draw(ctx,element) {
@@ -151,6 +201,7 @@ document.addEventListener("keydown", function (ev) {
     }
 });
 
+board_view.draw();
 window.requestAnimationFrame(controller);
 
 
