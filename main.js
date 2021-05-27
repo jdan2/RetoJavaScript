@@ -11,7 +11,7 @@
 
     self.Board.prototype = {
         get elements() {
-            var elements = this.bars;
+            var elements = this.bars.map(function(bar){ return bar;});
             elements.push(this.ball);
             return elements;
         }
@@ -33,7 +33,18 @@
 
         board.ball = this;
         this.kind = "circle";
-
+    }
+    self.Ball.prototype = {
+        move: function () {
+            this.x += (this.speed_x * this.direction);
+            this.y += (this.speed_y);
+        },
+        get width() {
+            return this.radius * 2;
+        },
+        get height() {
+            return this.radius * 2;
+        },
     }
 })();
 
@@ -84,9 +95,11 @@
             };
         },
         play: function () {
-          
+            if (this.board.playing) {
                 this.clean();
                 this.draw();
+                this.board.ball.move();
+            }
             
         }
     }
