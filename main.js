@@ -43,6 +43,7 @@
     }
 })();
 
+
 (function () {
     self.BoardView = function (canvas, board) {
         this.canvas = canvas;
@@ -79,14 +80,37 @@
     
 })();
 
+var board = new Board(800, 400);
+var bar = new Bar(20, 100, 40, 100, board);
+var bar = new Bar(735, 100, 40, 100, board);
+var canvas = document.getElementById('canvas');
+var board_view = new BoardView(canvas, board);
+
+document.addEventListener("keydown", function (ev) {
+
+    if (ev.keyCode == 38) {
+        ev.preventDefault();       
+        bar1.up();
+        
+    } else if (ev.keyCode == 40) {
+        ev.preventDefault();
+        bar1.down();
+    } else if (ev.keyCode == 87) {
+        ev.preventDefault();
+        bar.up();
+    } else if (ev.keyCode == 83) {
+        ev.preventDefault();
+        bar.down();
+    } else if (ev.keyCode === 32) {
+        ev.preventDefault();
+        board.playing = !board.playing;
+    }
+});
+
 self.addEventListener("load", main);
 
 function main() {
-    var board = new Board(800, 400);
-    var bar = new Bar(20, 100, 40, 100, board);
-    var bar = new Bar(735, 100, 40, 100, board);
-    var canvas = document.getElementById('canvas');
-    var board_view = new BoardView(canvas, board);
+
 
     board_view.draw();
 }
