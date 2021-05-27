@@ -24,12 +24,12 @@
         this.y = y;
         this.radius = radius;
         this.speed_y = 0;
-        this.speed_x = 2;
+        this.speed_x = 5;
         this.board = board;
         this.direction = 1;
         this.bounceAngle = 0;
         this.maxBounceAngle = Math.PI / 12;
-        this.speed = 3;
+        this.speed = 5;
 
         board.ball = this;
         this.kind = "circle";
@@ -234,7 +234,7 @@ function reiniciar() {
         ball.y = 100;
         ball.direction = 1;
         ball.bounceAngle = 0;
-        ball.speed_x = 2;
+        ball.speed_x = 5;
         ball.speed_y = 0;
         ball.maxBounceAngle = Math.PI / 12;
         board.playing = !board.playing;
